@@ -1,44 +1,51 @@
 package ro.ulbs.paradigme.lab5;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
         try {
-            Path inputPath = Paths.get("in.txt");
-            String content = new String(Files.readAllBytes(inputPath));
+            List<String> lines = Files.readAllLines(Paths.get("in.txt"));
 
-            String textAfterLineBreak = content.replace("\n", "\n\n");
-            System.out.println("Text după adăugarea unui newline pentru fiecare linie:\n");
-            System.out.println(textAfterLineBreak+"\n");
+            List<String> linesWithNewLine = addNewLineAfterEachLine(lines);
+            System.out.println("Rezultatul dupa adaugarea unui newline la sfarsitul fiecarei linii: ");
+            linesWithNewLine.forEach(System.out::println);
 
-            String[] parts = content.split("\\.");
-            StringBuilder textWithNewlinesForDots = new StringBuilder();
+            String text = String.join(" ", lines);
+            List<String> linesWithNewLineAfterDot = addNewLineAfterEachDot(text);
+            System.out.println("\nRezultatul dupa adaugarea unui newline dupa fiecare punct: ");
+            linesWithNewLineAfterDot.forEach(System.out::println);
 
-            for (String part : parts) {
-                textWithNewlinesForDots.append(part.trim());
-                textWithNewlinesForDots.append(".\n");
-            }
-
-            System.out.println("Text după adăugarea unui newline pentru fiecare punct:");
-            System.out.println(textWithNewlinesForDots+"\n");
-
-            Path outputPath = Paths.get("out.txt");
-            try (BufferedWriter writer = Files.newBufferedWriter(outputPath)) {
-                writer.write("Text cu newline după fiecare linie:");
-                writer.write(textAfterLineBreak);
-                writer.write("\n\n");
-
-                writer.write("Text cu newline după fiecare punct:");
-                writer.write(textWithNewlinesForDots.toString());
-            }
-
-        } catch (IOException e) {
+            writeToFile("out.txt", linesWithNewLine,linesWithNewLineAfterDot);
+        }catch(IOException e){
             e.printStackTrace();
         }
+    }
+
+    static List<String> addNewLineAfterEachLine(List<String> lines) {
+        List<String> result = new ArrayList<>();
+        for (String line : lines) {
+            result.add(line+"\n");
+        }
+        return result;
+    }
+
+    static List<String> addNewLineAfterEachDot(String text) {
+        List<String> result = new ArrayList<>();
+        String[] sentences=text.split("(?<=\\.)");
+        for(String sentence:sentences){
+            result.add(sentence.trim()+"\n");
+        }
+        return result;
+    }
+    static void writeToFile(String fileName,List<String> linesWithNewLine, List<String> linesWithNewLineAfterDot) throws IOException {
+        Path path = Paths.get(fileName);
+        List<String> allLines = new ArrayList<>();
+        allLines.add("Rezultatul cu newline la sfârșitul fiecărei linii:");
+        allLines.addAll(linesWithNewLine);
+        allLines.add("\nRezultatul cu newline după fiecare punct:");
+        allLines.addAll(linesWithNewLineAfterDot);
+        Files.write(path, allLines);
     }
 }
