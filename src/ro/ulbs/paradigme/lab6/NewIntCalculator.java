@@ -1,8 +1,9 @@
 package ro.ulbs.paradigme.lab6;
 
-class NewIntCalculator extends ACalculator {
+public class NewIntCalculator extends ACalculator {
 
     public NewIntCalculator(Integer initialValue) {
+
         this.state = initialValue;
     }
 
