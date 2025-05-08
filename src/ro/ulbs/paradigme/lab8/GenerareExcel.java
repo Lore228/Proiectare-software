@@ -54,11 +54,11 @@ public class GenerareExcel {
             } else {
                 Cell maxCell = row.createCell(6);
                 String rowIndex = String.valueOf(rowNum + 1);
-                maxCell.setCellFormula("MAX(D" + rowIndex + ":G" + rowIndex + ")");
+                maxCell.setCellFormula("MAX(C" + rowIndex + ":F" + rowIndex + ")");
                 maxCell.setCellStyle(yellowStyle);
 
                 Cell avgCell = row.createCell(7);
-                avgCell.setCellFormula("AVERAGE(D" + rowIndex + ":G" + rowIndex + ")");
+                avgCell.setCellFormula("AVERAGE(C" + rowIndex + ":F" + rowIndex + ")");
                 avgCell.setCellStyle(yellowStyle);
             }
             rowNum++;
